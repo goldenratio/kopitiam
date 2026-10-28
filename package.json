@@ -1,0 +1,14 @@
+{
+  "name": "kopitiam-prelude",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json",
+    "bundle": "esbuild src/scripts/prelude.ts --bundle --format=iife --target=es2022 --keep-names --outfile=src/gen/prelude.js",
+    "build": "npm run typecheck && npm run bundle"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2",
+    "typescript": "7.0.2"
+  }
+}

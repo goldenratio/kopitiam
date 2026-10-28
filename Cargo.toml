@@ -1,0 +1,38 @@
+[package]
+name = "kopitiam"
+version = "0.1.0"
+edition = "2024"
+
+[features]
+default = []
+audio = ["dep:web-audio-api"]
+
+[lib]
+name = "kopitiam"
+path = "src/lib.rs"
+
+[dependencies]
+anyhow = "1.0.102"
+bytemuck = "1"
+clap = { version = "4.5.27", features = ["derive"] }
+boa_engine = { version = "0.22.0", default-features = false }
+rayon = "1.12.0"
+serde = { version = "1.0.229", features = ["derive"] }
+serde_json = "1.0.151"
+skia-safe = "0.153.3"
+softbuffer = "0.4.8"
+web-audio-api = { version = "1.7.0", optional = true }
+winit = "0.30.13"
+
+[profile.dev]
+debug = 1
+
+[profile.dev.package."*"]
+opt-level = 3
+
+[profile.release]
+opt-level = 3        # optimize for speed
+lto = true           # link-time optimization
+codegen-units = 1    # better dead-code elimination
+panic = "abort"      # remove unwinding runtime
+strip = true         # remove debug symbols
