@@ -369,7 +369,7 @@ declare const __ENGINE_PROFILE_ENABLED__: boolean;
 declare const __ENGINE_AUDIO_ENABLED__: boolean;
 
 // -----------------------------------------
-// native functions implmeneted on Rust side
+// native functions implemented on Rust side
 // -----------------------------------------
 declare function __engine_fetch(url: string): string;
 declare function __engine_create_draw_batch(x: number, y: number, width: number, height: number): number;

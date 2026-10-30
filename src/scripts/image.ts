@@ -1,9 +1,9 @@
-import { EngineListener } from "./types";
+import type { EngineListener } from "./types";
 import { __engine_number } from "./util";
 import { EngineEvent, EngineEventTarget } from "./event";
 import { Canvas, OffscreenCanvas } from "./canvas";
 import { EngineBlob } from "./blob";
-import { engineGlobal } from "./engine/engine-global";
+import { engineGlobal } from "./engine";
 
 export class Image extends EngineEventTarget {
   __width: number;

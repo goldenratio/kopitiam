@@ -1,12 +1,9 @@
-import { engineGlobal } from "./engine/engine-global";
-import { EngineListener, EngineListenerMap, EngineEventInit } from "./types";
-
-export function __engine_is_profile_enabled(): boolean {
-  return engineGlobal.__engine_profile_enabled === true;
-}
+import { engineGlobal } from "./engine";
+import type { EngineListener, EngineListenerMap, EngineEventInit } from "./types";
 
 export function __engine_call_profiled_tick_listener(listener: EngineListener, thisArg: unknown, event: EngineEvent): void {
-  if (!__engine_is_profile_enabled() || event.type !== "tick") {
+  const profile_enabled = engineGlobal.__engine_profile_enabled === true;
+  if (!profile_enabled || event.type !== "tick") {
     listener.call(thisArg, event);
     return;
   }

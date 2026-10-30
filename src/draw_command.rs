@@ -953,7 +953,8 @@ fn apply_paint_style(
     } => {
       let start = start_angle.to_degrees();
       if let Some(shader) = gradient_shader_from_stops(stops, global_alpha, |colors, positions| {
-        let colors = gradient::Colors::new(colors, positions, TileMode::Clamp, None);
+        // Repeat so angles before `start` wrap around instead of clamping to the first stop.
+        let colors = gradient::Colors::new(colors, positions, TileMode::Repeat, None);
         let gradient = gradient::Gradient::new(colors, gradient::Interpolation::default());
         gradient::shaders::sweep_gradient((*x, *y), (start, start + 360.0), &gradient, None)
       })? {

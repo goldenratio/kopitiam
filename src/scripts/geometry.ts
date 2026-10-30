@@ -1,4 +1,4 @@
-import { EngineMatrixInit, EnginePointInit } from "./types";
+import type { EngineMatrixInit, EnginePointInit } from "./types";
 import { __engine_number } from "./util";
 
 export class DOMPoint {

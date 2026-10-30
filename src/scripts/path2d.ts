@@ -1,4 +1,4 @@
-import { EngineMatrixInit } from "./types";
+import type { EngineMatrixInit } from "./types";
 import { __engine_number } from "./util";
 
 export function __engine_is_path2d(value: unknown): value is Path2D {

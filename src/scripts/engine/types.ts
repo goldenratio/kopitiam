@@ -81,5 +81,3 @@ export interface EngineGlobal {
   OscillatorNode: typeof OscillatorNode;
   BiquadFilterNode: typeof BiquadFilterNode;
 }
-
-export const engineGlobal = globalThis as unknown as EngineGlobal;
