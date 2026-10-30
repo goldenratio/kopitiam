@@ -17,7 +17,7 @@ addEventListener("resize", (event) => {
 });
 
 canvas.addEventListener("tick", (event) => {
-  const dt = Math.min(event.deltaTime / 1000, 1);
+  const dt = Math.min(event.deltaTime / 60, 1);
   pulse = Math.max(0, pulse - dt * 2);
 
   const width = canvas.width;

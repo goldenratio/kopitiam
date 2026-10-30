@@ -46,38 +46,6 @@ export function __engine_blob_part_bytes(part: unknown): number[] {
   return [];
 }
 
-export class EngineResolvedPromise<TValue = unknown> {
-  __value: TValue;
-
-  constructor(value: TValue) {
-    this.__value = value;
-  }
-
-  then(onFulfilled: EnginePromiseFulfilled<TValue>, onRejected: EnginePromiseRejected): EngineResolvedPromise<any> {
-    try {
-      return new EngineResolvedPromise(
-        typeof onFulfilled === "function" ? onFulfilled(this.__value) : this.__value
-      );
-    } catch (error) {
-      if (typeof onRejected === "function") {
-        return new EngineResolvedPromise(onRejected(error));
-      }
-      throw error;
-    }
-  }
-
-  catch(): EngineResolvedPromise<TValue> {
-    return this;
-  }
-
-  finally(onFinally: EnginePromiseFinally): EngineResolvedPromise<TValue> {
-    if (typeof onFinally === "function") {
-      onFinally();
-    }
-    return this;
-  }
-}
-
 export class EngineBlob {
   __engine_src: string;
   __engine_text: string | undefined;
@@ -114,13 +82,13 @@ export class EngineBlob {
     return this.__engine_src;
   }
 
-  text(): EngineResolvedPromise<string> {
+  async text(): Promise<string> {
     if (this.__engine_text === undefined) {
       this.__engine_text = this.__engine_src
         ? __engine_fetch(this.__engine_src)
         : this.__engine_bytes.map((byte) => String.fromCharCode(byte)).join("");
     }
-    return new EngineResolvedPromise(this.__engine_text);
+    return this.__engine_text;
   }
 }
 
@@ -152,18 +120,18 @@ export class EngineFetchResponse {
     return this.__engine_text;
   }
 
-  text(): EngineResolvedPromise<string> {
+  async text(): Promise<string> {
     this.bodyUsed = true;
-    return new EngineResolvedPromise(this.__engine_read_text());
+    return this.__engine_read_text();
   }
 
-  json(): EngineResolvedPromise<unknown> {
+  async json(): Promise<unknown> {
     this.bodyUsed = true;
-    return new EngineResolvedPromise(JSON.parse(this.__engine_read_text()));
+    return JSON.parse(this.__engine_read_text());
   }
 
-  blob(): EngineResolvedPromise<EngineBlob> {
+  async blob(): Promise<EngineBlob> {
     this.bodyUsed = true;
-    return new EngineResolvedPromise(EngineBlob.fromUrl(this.url, this.__engine_text));
+    return EngineBlob.fromUrl(this.url, this.__engine_text);
   }
 }

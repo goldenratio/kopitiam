@@ -25,6 +25,7 @@ pub struct CliOptions {
 impl From<&CliOptions> for EngineOptions {
   fn from(value: &CliOptions) -> Self {
     let mut engine_options = EngineOptions::default();
+    engine_options = engine_options.with_console(true);
 
     if let Some((width, height)) = value.size {
       engine_options = engine_options.with_canvas_size(width, height);

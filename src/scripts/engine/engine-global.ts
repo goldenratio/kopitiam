@@ -1,5 +1,5 @@
 import type { AudioBuffer, AudioBufferSourceNode, AudioContext, AudioNode, AudioParam, BiquadFilterNode, GainNode, OscillatorNode } from "../audio";
-import type { EngineBlob, EngineFetchResponse, EngineResolvedPromise } from "../blob";
+import type { EngineBlob, EngineFetchResponse } from "../blob";
 import type { Canvas, OffscreenCanvas } from "../canvas";
 import type { CanvasRenderingContext2D } from "../context2d";
 import type { EngineEvent, EngineEventTarget } from "../event";
@@ -20,7 +20,6 @@ export interface EngineGlobal {
   __engine_profile_enabled: boolean;
   __engine_next_canvas_id: number;
   __engine_next_bitmap_id: number;
-  __engine_tick_frame: number;
   __engine_last_tick_timestamp: number;
   __engine_global_event_target: EngineEventTarget;
 
@@ -50,14 +49,10 @@ export interface EngineGlobal {
   addEventListener(type: string, listener: EngineListener): void;
   removeEventListener(type: string, listener: EngineListener): void;
   dispatchEvent(event: EngineEvent): boolean;
-  fetch(input: unknown): EngineResolvedPromise<EngineFetchResponse>;
-  createImageBitmap(source: EngineImageBitmapSource, ...args: number[]): EngineResolvedPromise<ImageBitmap>;
+  fetch(input: unknown): Promise<EngineFetchResponse>;
+  createImageBitmap(source: EngineImageBitmapSource, ...args: number[]): Promise<ImageBitmap>;
 
-  // drawing shortcuts
   exit(): void;
-  clear(color?: string): void;
-  fillRect(x: number, y: number, width: number, height: number, color?: string): void;
-  strokeRect(x: number, y: number, width: number, height: number, color?: string, lineWidth?: number): void;
 
   // constructors
   Event: typeof EngineEvent;

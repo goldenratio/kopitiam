@@ -34,7 +34,7 @@ let sparks;
 let motes;
 let pulses;
 let stepTimer;
-let lastTime;
+let elapsed = 0;
 let running;
 let shake;
 
@@ -52,7 +52,6 @@ function reset() {
   motes = [];
   pulses = [];
   stepTimer = 0;
-  lastTime = 0;
   running = true;
   shake = 0;
 
@@ -83,8 +82,8 @@ function reset() {
     motes.push({
       x: Math.random() * canvas.width,
       y: Math.random() * canvas.height,
-      vx: (Math.random() - 0.5) * 18,
-      vy: -8 - Math.random() * 26,
+      vx: (Math.random() - 0.5) * 0.3,
+      vy: -0.13 - Math.random() * 0.43,
       size: 0.6 + Math.random() * 2.8,
       pulse: Math.random() * Math.PI * 2,
       color: Math.random() > 0.5 ? "#18f6ff" : "#ff2bd6",
@@ -163,18 +162,18 @@ function burst(x, y, color) {
   const px = x * cell + cell * 0.5;
   const py = y * cell + cell * 0.5;
   pulses.push({ x: px, y: py, age: 0, color });
-  pulses.push({ x: px, y: py, age: -0.08, color: "#ffffff" });
+  pulses.push({ x: px, y: py, age: -4.8, color: "#ffffff" });
   shake = 18;
   for (let i = 0; i < 230; i += 1) {
     const angle = Math.random() * Math.PI * 2;
-    const speed = 70 + Math.random() * Math.random() * 780;
+    const speed = 1.17 + Math.random() * Math.random() * 13;
     const whiteHot = Math.random() > 0.76;
     sparks.push({
       x: px,
       y: py,
       vx: Math.cos(angle) * speed,
       vy: Math.sin(angle) * speed,
-      life: 0.25 + Math.random() * 0.95,
+      life: 15 + Math.random() * 57,
       age: 0,
       width: 1 + Math.random() * 5,
       drag: 0.955 + Math.random() * 0.04,
@@ -191,13 +190,13 @@ function trailEmbers(cycle) {
 
   for (let i = 0; i < 5; i += 1) {
     const side = (Math.random() - 0.5) * cell * 1.1;
-    const speed = 35 + Math.random() * 110;
+    const speed = 0.58 + Math.random() * 1.83;
     sparks.push({
       x: px + sideX * side,
       y: py + sideY * side,
-      vx: -cycle.dir.x * speed + sideX * (Math.random() - 0.5) * 70,
-      vy: -cycle.dir.y * speed + sideY * (Math.random() - 0.5) * 70,
-      life: 0.18 + Math.random() * 0.28,
+      vx: -cycle.dir.x * speed + sideX * (Math.random() - 0.5) * 1.17,
+      vy: -cycle.dir.y * speed + sideY * (Math.random() - 0.5) * 1.17,
+      life: 10.8 + Math.random() * 16.8,
       age: 0,
       width: 0.8 + Math.random() * 2.2,
       drag: 0.94,
@@ -231,7 +230,7 @@ function updateSparks(dt) {
   for (const mote of motes) {
     mote.x += mote.vx * dt;
     mote.y += mote.vy * dt;
-    mote.pulse += dt * 3;
+    mote.pulse += dt * 0.05;
     if (mote.y < -12) mote.y = canvas.height + 12;
     if (mote.x < -12) mote.x = canvas.width + 12;
     if (mote.x > canvas.width + 12) mote.x = -12;
@@ -240,15 +239,14 @@ function updateSparks(dt) {
   for (const pulse of pulses) {
     pulse.age += dt;
   }
-  pulses = pulses.filter((pulse) => pulse.age < 0.8);
+  pulses = pulses.filter((pulse) => pulse.age < 48);
 
-  shake = Math.max(0, shake - dt * 42);
+  shake = Math.max(0, shake - dt * 0.7);
 }
 
 function update(event) {
-  const time = event.timestamp;
-  const dt = lastTime === 0 ? 0 : Math.min((time - lastTime) / 1000, 0.05);
-  lastTime = time;
+  const dt = event.deltaTime;
+  elapsed += dt;
 
   if (keys.has("Enter") || keys.has(" ")) {
     reset();
@@ -266,7 +264,7 @@ function update(event) {
 
   if (running) {
     stepTimer += dt;
-    const interval = Math.max(0.038, 0.072 - player.trail.length * 0.00006);
+    const interval = Math.max(2.28, 4.32 - player.trail.length * 0.0036);
     while (stepTimer >= interval && running) {
       stepTimer -= interval;
       step();
@@ -274,7 +272,7 @@ function update(event) {
   }
 
   updateSparks(dt);
-  draw(time / 1000);
+  draw(elapsed);
 }
 
 function draw(time) {
@@ -315,12 +313,12 @@ function drawBackground(time) {
   ctx.lineWidth = 1;
   ctx.beginPath();
   for (let x = 0; x <= canvas.width; x += cell) {
-    const drift = Math.sin(time * 1.4 + x * 0.025) * 1.5;
+    const drift = Math.sin(time * 0.0233 + x * 0.025) * 1.5;
     ctx.moveTo(x + drift, 0);
     ctx.lineTo(x - drift, canvas.height);
   }
   for (let y = 0; y <= canvas.height; y += cell) {
-    const drift = Math.cos(time * 1.2 + y * 0.025) * 1.5;
+    const drift = Math.cos(time * 0.02 + y * 0.025) * 1.5;
     ctx.moveTo(0, y + drift);
     ctx.lineTo(canvas.width, y - drift);
   }
@@ -328,15 +326,15 @@ function drawBackground(time) {
 
   ctx.globalCompositeOperation = "lighter";
   ctx.globalAlpha = 0.08;
-  for (let y = 3 + time * 26 % 18; y < canvas.height; y += 18) {
+  for (let y = 3 + time * 0.433 % 18; y < canvas.height; y += 18) {
     ctx.fillStyle = "#18f6ff";
     ctx.fillRect(0, y, canvas.width, 1);
   }
 
   ctx.globalAlpha = 0.12;
   for (let i = 0; i < 16; i += 1) {
-    const x = (time * 80 + i * 113) % (canvas.width + 80) - 40;
-    const y = 36 + (i * 41 + Math.sin(time + i) * 80) % (canvas.height - 72);
+    const x = (time * 1.333 + i * 113) % (canvas.width + 80) - 40;
+    const y = 36 + (i * 41 + Math.sin(time * 0.0167 + i) * 80) % (canvas.height - 72);
     const streak = ctx.createLinearGradient(x - 40, y, x + 70, y);
     streak.addColorStop(0, "#18f6ff00");
     streak.addColorStop(0.5, i % 2 ? "#ff2bd6" : "#18f6ff");
@@ -345,7 +343,7 @@ function drawBackground(time) {
     ctx.fillRect(x - 40, y, 110, 2);
   }
 
-  ctx.globalAlpha = 0.22 + Math.sin(time * 2) * 0.06;
+  ctx.globalAlpha = 0.22 + Math.sin(time * 0.0333) * 0.06;
   const horizon = ctx.createLinearGradient(0, 0, canvas.width, 0);
   horizon.addColorStop(0, "#18f6ff");
   horizon.addColorStop(0.5, "#7c3cff");
@@ -359,7 +357,7 @@ function drawBackground(time) {
 
 function drawMotes(time) {
   for (const mote of motes) {
-    const glow = 0.35 + Math.sin(mote.pulse + time * 2) * 0.25;
+    const glow = 0.35 + Math.sin(mote.pulse + time * 0.0333) * 0.25;
     ctx.globalAlpha = glow;
     ctx.fillStyle = mote.color;
     ctx.beginPath();
@@ -377,7 +375,7 @@ function drawMotes(time) {
 function drawTrail(cycle, time) {
   if (cycle.trail.length < 2) return;
 
-  const pulse = 0.75 + Math.sin(time * 8 + cycle.trail.length * 0.04) * 0.25;
+  const pulse = 0.75 + Math.sin(time * 0.133 + cycle.trail.length * 0.04) * 0.25;
   for (const width of [26, 17, 10, 4]) {
     ctx.globalAlpha = width === 26 ? 0.06 : width === 17 ? 0.13 : width === 10 ? 0.28 : 0.98;
     ctx.strokeStyle = width === 4 ? cycle.color : cycle.glow;
@@ -456,7 +454,7 @@ function drawCycle(cycle, time) {
   ctx.lineTo(-cell * 0.35, cell * 0.36);
   ctx.stroke();
 
-  ctx.globalAlpha = 0.7 + Math.sin(time * 18) * 0.2;
+  ctx.globalAlpha = 0.7 + Math.sin(time * 0.3) * 0.2;
   ctx.fillStyle = "#ffffff";
   ctx.beginPath();
   ctx.arc(cell * 0.45, 0, 1.8, 0, Math.PI * 2);
@@ -490,7 +488,7 @@ function drawSparks() {
 function drawPulses() {
   for (const pulse of pulses) {
     if (pulse.age < 0) continue;
-    const t = pulse.age / 0.8;
+    const t = pulse.age / 48;
     ctx.globalAlpha = Math.max(0, 1 - t);
     ctx.strokeStyle = pulse.color;
     ctx.lineWidth = 8 * (1 - t);
@@ -510,7 +508,7 @@ function drawPulses() {
 function drawSilentRestartGlyph(time) {
   const cx = canvas.width * 0.5;
   const cy = canvas.height * 0.5;
-  const radius = 28 + Math.sin(time * 4) * 4;
+  const radius = 28 + Math.sin(time * 0.0667) * 4;
 
   ctx.globalCompositeOperation = "lighter";
   ctx.globalAlpha = 0.7;

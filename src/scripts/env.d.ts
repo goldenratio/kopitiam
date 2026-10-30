@@ -58,10 +58,23 @@ interface EngineConsoleMessage {
 
 interface TickEvent {
   readonly type: "tick";
-  readonly timestamp: number;
-  readonly time: number;
+  /**
+   * time in milliseconds of this tick, since engine start
+   */
+  readonly lastTime: number;
+  /**
+   * Scalar representing the delta time factor.
+   * This is a dimensionless value representing the fraction of a frame at the target framerate.
+   * At 60 FPS, this value is typically around 1.0.
+   *
+   * This is NOT in milliseconds - it's a scalar multiplier for frame-independent animations.
+  */
   readonly deltaTime: number;
-  readonly frame: number;
+  /**
+   * milliseconds elapsed from last update.
+   * Ideally value should be 16.66 ms
+   */
+  readonly elapsedMS: number;
   readonly target: unknown;
   readonly currentTarget: unknown;
 }
@@ -330,14 +343,11 @@ interface EngineAudioContextOptions {
 type EngineDecodeSuccessCallback = (buffer: import("./audio").AudioBuffer) => void;
 type EngineDecodeErrorCallback = (error: unknown) => void;
 type EngineImageCallback = (image: import("./image").Image) => void;
-type EnginePromiseFulfilled<T> = (value: T) => unknown;
-type EnginePromiseRejected = (error: unknown) => unknown;
-type EnginePromiseFinally = () => void;
 
 interface Blob {
   readonly size: number;
   readonly type: string;
-  text(): import("./blob").EngineResolvedPromise;
+  text(): Promise<string>;
 }
 
 interface BlobConstructor {
@@ -346,18 +356,8 @@ interface BlobConstructor {
 
 declare const canvas: EngineCanvas;
 declare function exit(): void;
-declare function clear(color?: string): void;
-declare function fillRect(x: number, y: number, width: number, height: number, color?: string): void;
-declare function strokeRect(
-  x: number,
-  y: number,
-  width: number,
-  height: number,
-  color?: string,
-  lineWidth?: number,
-): void;
 
-declare function fetch(input: unknown): import("./blob").EngineResolvedPromise;
+declare function fetch(input: unknown): Promise<import("./blob").EngineFetchResponse>;
 
 // ---------------------------------------------------------------
 // placeholders substituted with literals by native_bridge.rs at load

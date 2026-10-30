@@ -45,7 +45,7 @@ globalThis.addEventListener("keydown", (event) => {
 });
 
 canvas.addEventListener("tick", (event) => {
-  pulse = Math.max(0, pulse - event.deltaTime / 350);
+  pulse = Math.max(0, pulse - event.deltaTime / 21);
 
   ctx.fillStyle = "#101820";
   ctx.fillRect(0, 0, canvas.width, canvas.height);

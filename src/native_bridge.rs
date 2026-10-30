@@ -1,4 +1,4 @@
-use std::{fs, str};
+use std::{fs, str, time::Instant};
 
 use anyhow::{Context as AnyhowContext, Result, anyhow};
 use boa_engine::{
@@ -41,13 +41,16 @@ struct ConsoleMessage {
 
 pub(crate) struct NativeBridge {
   js: JsContext,
+  console: bool,
 }
 
 impl NativeBridge {
   pub(crate) fn new(script: &str, options: &EngineOptions) -> Result<NativeBridge> {
     let mut bridge = Self {
       js: JsContext::default(),
+      console: options.console,
     };
+
     register_engine_natives(&mut bridge).context("failed to register JavaScript engine natives")?;
     register_custom_natives(&mut bridge, options)
       .context("failed to register custom JavaScript natives")?;
@@ -78,11 +81,13 @@ impl NativeBridge {
         &serde_json::to_string(&options.window.clone().normalized())
           .context("failed to serialize engine window config")?,
       );
+
     eval(
       &mut bridge.js,
       &prelude,
       "failed to initialize JavaScript engine prelude",
     )?;
+
     eval(&mut bridge.js, script, "failed to execute user JavaScript")?;
 
     Ok(bridge)
@@ -110,9 +115,11 @@ impl NativeBridge {
 
   pub(crate) fn has_exit_command(&mut self) -> Result<bool> {
     let global = self.js.global_object();
+
     let commands_value = global
       .get(js_string!("__engine_draw_commands"), &mut self.js)
       .map_err(boa_errors::js_error)?;
+
     let commands_array = value_to_object(commands_value, "__engine_draw_commands")?;
     let len = boa_utils::array_len(&commands_array, &mut self.js)?;
 
@@ -223,17 +230,22 @@ impl NativeBridge {
 
   pub(crate) fn take_draw_commands(&mut self) -> Result<Vec<DrawCommand>> {
     let global = self.js.global_object();
+
     let commands_value = global
       .get(js_string!("__engine_draw_commands"), &mut self.js)
       .map_err(boa_errors::js_error)?;
+
     let commands_array = value_to_object(commands_value, "__engine_draw_commands")?;
+
     let commands = draw_commands_from_array(&commands_array, &mut self.js)
       .context("JavaScript produced invalid draw commands")?;
 
     commands_array
       .set(js_string!("length"), 0, true, &mut self.js)
       .map_err(boa_errors::js_error)?;
+
     draw_batch::clear_draw_batches();
+
     eval(
       &mut self.js,
       "globalThis.__engine_invalidate_draw_batches?.()",
@@ -244,8 +256,8 @@ impl NativeBridge {
   }
 
   pub(crate) fn drain_console_messages(&mut self) -> Result<()> {
-    let started = std::time::Instant::now();
-    if !cfg!(debug_assertions) {
+    let started = Instant::now();
+    if !self.console {
       crate::profile::record_console_drain(started.elapsed());
       return Ok(());
     }
@@ -265,6 +277,7 @@ impl NativeBridge {
       "globalThis.__engine_console_dirty = false; JSON.stringify(globalThis.__engine_console_messages.splice(0))",
       "failed to drain JavaScript console messages",
     )?;
+
     let messages: Vec<ConsoleMessage> =
       serde_json::from_str(&json).context("JavaScript produced invalid console messages")?;
 
@@ -357,15 +370,19 @@ fn eval_to_string(js: &mut JsContext, source: &str, message: &'static str) -> Re
 
 fn call_global_function(js: &mut JsContext, name: &str, args: &[JsValue]) -> Result<()> {
   let global = js.global_object();
+
   let callback = global
     .get(js_string!(name), js)
     .context_js(js, "failed to load JavaScript function")?
     .as_object()
     .ok_or_else(|| anyhow!("globalThis.{name} is not callable"))?;
+
   callback
     .call(&JsValue::undefined(), args, js)
     .context_js(js, "failed to call JavaScript function")?;
+
   js.run_jobs()
     .context_js(js, "failed to run JavaScript jobs")?;
+
   Ok(())
 }

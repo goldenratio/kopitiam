@@ -45,7 +45,7 @@ swoosh.arcTo(600, 210, 696, 296, 52);
 const clonedSwoosh = new Path2D(swoosh);
 
 canvas.addEventListener("tick", (event) => {
-  const time = event.timestamp * 0.001;
+  const time = event.lastTime * 0.001;
 
   ctx.fillStyle = "#101820";
   ctx.fillRect(0, 0, canvas.width, canvas.height);

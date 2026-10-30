@@ -85,7 +85,7 @@ function drawMode(index, mode, time) {
 }
 
 canvas.addEventListener("tick", (event) => {
-  const time = event.timestamp / 1000;
+  const time = event.lastTime / 1000;
 
   ctx.globalCompositeOperation = "source-over";
   ctx.globalAlpha = 1;

@@ -34,7 +34,7 @@ function roundedPanel(x, y, width, height) {
 }
 
 canvas.addEventListener("tick", (event) => {
-  const time = event.timestamp * 0.001;
+  const time = event.lastTime * 0.001;
 
   ctx.fillStyle = "#0f172a";
   ctx.fillRect(0, 0, canvas.width, canvas.height);

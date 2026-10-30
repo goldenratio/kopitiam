@@ -3,7 +3,7 @@ import { DOMPoint, DOMMatrix } from "../geometry";
 import { Canvas, OffscreenCanvas } from "../canvas";
 import { Image, ImageBitmap, ImageData } from "../image";
 import { CanvasGradient, CanvasPattern } from "../paint";
-import { EngineResolvedPromise, EngineBlob, EngineFetchResponse } from "../blob";
+import { EngineBlob, EngineFetchResponse } from "../blob";
 import { Path2D } from "../path2d";
 import { CanvasRenderingContext2D } from "../context2d";
 import { AudioParam, AudioNode, GainNode, OscillatorNode, BiquadFilterNode, AudioBuffer, AudioBufferSourceNode, AudioContext } from "../audio";
@@ -18,7 +18,6 @@ engineGlobal.__engine_console_enabled = __ENGINE_CONSOLE_ENABLED__;
 engineGlobal.__engine_profile_enabled = __ENGINE_PROFILE_ENABLED__;
 engineGlobal.__engine_next_canvas_id = 0;
 engineGlobal.__engine_next_bitmap_id = 0;
-engineGlobal.__engine_tick_frame = 0;
 engineGlobal.__engine_last_tick_timestamp = -1;
 const engineAudioEnabled = __ENGINE_AUDIO_ENABLED__;
 
@@ -55,9 +54,9 @@ engineGlobal.__engine_invalidate_draw_batches = function __engine_invalidate_dra
 engineGlobal.Event = EngineEvent;
 engineGlobal.DOMMatrix = DOMMatrix;
 engineGlobal.DOMPoint = DOMPoint;
-engineGlobal.fetch = function fetch(input: unknown): EngineResolvedPromise<EngineFetchResponse> {
+engineGlobal.fetch = function fetch(input: unknown): Promise<EngineFetchResponse> {
   const url = typeof input === "object" && input !== null && "url" in input
     ? String((input as { url: unknown }).url)
     : String(input);
-  return new EngineResolvedPromise(new EngineFetchResponse(url));
+  return Promise.resolve(new EngineFetchResponse(url));
 };

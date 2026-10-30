@@ -23,7 +23,7 @@ canvas.addEventListener("pointerleave", () => {
 });
 
 canvas.addEventListener("tick", (event) => {
-  const time = event.timestamp / 1000;
+  const time = event.lastTime / 1000;
   const w = canvas.width;
   const h = canvas.height;
 

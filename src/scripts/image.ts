@@ -2,7 +2,7 @@ import { EngineListener } from "./types";
 import { __engine_number } from "./util";
 import { EngineEvent, EngineEventTarget } from "./event";
 import { Canvas, OffscreenCanvas } from "./canvas";
-import { EngineResolvedPromise, EngineBlob } from "./blob";
+import { EngineBlob } from "./blob";
 import { engineGlobal } from "./engine/engine-global";
 
 export class Image extends EngineEventTarget {
@@ -72,8 +72,8 @@ export class Image extends EngineEventTarget {
     }
   }
 
-  decode(): EngineResolvedPromise<void> {
-    return new EngineResolvedPromise(undefined);
+  decode(): Promise<void> {
+    return Promise.resolve();
   }
 }
 

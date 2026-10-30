@@ -4,7 +4,7 @@ const ctx = canvas.getContext("2d");
 let angle = 0;
 
 canvas.addEventListener("tick", (event) => {
-  angle += event.deltaTime * 0.002;
+  angle += event.deltaTime / 30;
 
   ctx.fillStyle = "#101820";
   ctx.fillRect(0, 0, canvas.width, canvas.height);

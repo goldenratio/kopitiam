@@ -21,6 +21,11 @@ impl Default for EngineOptions {
 }
 
 impl EngineOptions {
+  pub fn with_console(mut self, value: bool) -> Self {
+    self.console = value;
+    self
+  }
+
   pub fn with_title(mut self, title: impl Into<String>) -> Self {
     self.window.title = title.into();
     self

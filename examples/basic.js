@@ -6,18 +6,13 @@ const rect = {
   y: 175,
   width: 90,
   height: 90,
-  speed: 280,
+  speed: 4.5,
   direction: 1,
 };
 
-let lastTime = 0;
-
 function update(event) {
-  const time = event.timestamp;
-  const deltaSeconds = lastTime === 0 ? 0 : (time - lastTime) / 1000;
-  lastTime = time;
-
-  rect.x += rect.speed * rect.direction * deltaSeconds;
+  const dt = event.deltaTime;
+  rect.x += rect.speed * rect.direction * dt;
 
   if (rect.x <= 0) {
     rect.x = 0;

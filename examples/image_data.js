@@ -34,7 +34,7 @@ for (let i = 0; i < captured.data.length; i += 4) {
 }
 
 canvas.addEventListener("tick", (event) => {
-  const time = event.timestamp * 0.001;
+  const time = event.lastTime * 0.001;
 
   ctx.fillStyle = "#111827";
   ctx.fillRect(0, 0, canvas.width, canvas.height);

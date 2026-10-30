@@ -30,7 +30,7 @@ let fpsStart = 0;
 let fpsFrames = 0;
 
 function frame(event) {
-  const time = event.timestamp;
+  const time = event.lastTime;
   const dt = lastTime === 0 ? 0 : Math.min((time - lastTime) / 1000, 1 / 30);
   lastTime = time;
 

@@ -47,7 +47,7 @@ globalThis.addEventListener("keyup", (event) => {
 let lastTime = 0;
 
 function update(event) {
-  const time = event.timestamp;
+  const time = event.lastTime;
   const dt = lastTime === 0 ? 0 : (time - lastTime) / 1000;
   lastTime = time;
 

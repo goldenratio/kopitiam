@@ -2,6 +2,8 @@ import { EngineEventInit } from "../types";
 import { EngineEvent } from "../event";
 import { engineGlobal } from "./engine-global";
 
+const FRAME_MS = 1000 / 60;
+
 engineGlobal.__engine_dispatch_events = function __engine_dispatch_events(events: EngineEventInit[]): void {
   const target = engineGlobal.window;
   if (!target) {
@@ -86,15 +88,14 @@ engineGlobal.__engine_dispatch_tick = function __engine_dispatch_tick(timestamp:
   }
   try {
     const lastTimestamp = engineGlobal.__engine_last_tick_timestamp;
-    const deltaTime = lastTimestamp < 0 ? 0 : timestamp - lastTimestamp;
+    const elapsedMS = lastTimestamp < 0 ? 0 : timestamp - lastTimestamp;
+    const deltaTime = Math.min(elapsedMS / FRAME_MS, 1);
     engineGlobal.__engine_last_tick_timestamp = timestamp;
-    engineGlobal.__engine_tick_frame++;
 
     const globalEvent = new EngineEvent("tick", {
-      timestamp,
-      time: timestamp,
+      lastTime: timestamp,
       deltaTime,
-      frame: engineGlobal.__engine_tick_frame,
+      elapsedMS,
       target: globalThis,
       currentTarget: globalThis
     });
@@ -102,10 +103,9 @@ engineGlobal.__engine_dispatch_tick = function __engine_dispatch_tick(timestamp:
 
     if (engineGlobal.window && (engineGlobal.window as unknown) !== engineGlobal) {
       const canvasEvent = new EngineEvent("tick", {
-        timestamp,
-        time: timestamp,
+        lastTime: timestamp,
         deltaTime,
-        frame: engineGlobal.__engine_tick_frame,
+        elapsedMS,
         target: engineGlobal.window,
         currentTarget: engineGlobal.window
       });
