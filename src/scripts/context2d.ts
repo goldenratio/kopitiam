@@ -1,11 +1,11 @@
-import { EngineMatrixInit } from "./types";
+import type { EngineMatrixInit } from "./types";
 import { __engine_number, __engine_same_optional_number } from "./util";
 import { DOMMatrix } from "./geometry";
 import { Canvas, OffscreenCanvas } from "./canvas";
 import { Image, ImageBitmap, ImageData } from "./image";
 import { __engine_is_opaque_style, CanvasGradient, CanvasPattern } from "./paint";
 import { __engine_is_path2d, __engine_path_segments, __engine_add_round_rect_path, Path2D } from "./path2d";
-import { engineGlobal } from "./engine/engine-global";
+import { engineGlobal } from "./engine";
 
 export function __engine_is_full_canvas_rect(canvas: { width: number; height: number }, command: CanvasDrawCommand): boolean {
   return command.x === 0 &&

@@ -2,7 +2,7 @@ import { __engine_number } from "./util";
 import { EngineEventTarget } from "./event";
 import { ImageBitmap } from "./image";
 import { CanvasRenderingContext2D } from "./context2d";
-import { engineGlobal } from "./engine/engine-global";
+import { engineGlobal } from "./engine";
 
 export class Canvas extends EngineEventTarget {
   __width: number;

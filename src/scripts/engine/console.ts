@@ -1,4 +1,4 @@
-import { engineGlobal } from "./engine-global";
+import type { EngineGlobal } from "./types";
 
 function __engine_console_format(value: unknown) {
   if (typeof value === "string") {
@@ -20,45 +20,49 @@ function __engine_console_format(value: unknown) {
   return String(value);
 }
 
-engineGlobal.console = {
-  log(...args: unknown[]) {
-    if (!engineGlobal.__engine_console_enabled) return;
-    engineGlobal.__engine_console_dirty = true;
-    engineGlobal.__engine_console_messages.push({
-      level: "log",
-      message: args.map(__engine_console_format).join(" ")
-    });
-  },
-  info(...args: unknown[]) {
-    if (!engineGlobal.__engine_console_enabled) return;
-    engineGlobal.__engine_console_dirty = true;
-    engineGlobal.__engine_console_messages.push({
-      level: "info",
-      message: args.map(__engine_console_format).join(" ")
-    });
-  },
-  debug(...args: unknown[]) {
-    if (!engineGlobal.__engine_console_enabled) return;
-    engineGlobal.__engine_console_dirty = true;
-    engineGlobal.__engine_console_messages.push({
-      level: "debug",
-      message: args.map(__engine_console_format).join(" ")
-    });
-  },
-  warn(...args: unknown[]) {
-    if (!engineGlobal.__engine_console_enabled) return;
-    engineGlobal.__engine_console_dirty = true;
-    engineGlobal.__engine_console_messages.push({
-      level: "warn",
-      message: args.map(__engine_console_format).join(" ")
-    });
-  },
-  error(...args: unknown[]) {
-    if (!engineGlobal.__engine_console_enabled) return;
-    engineGlobal.__engine_console_dirty = true;
-    engineGlobal.__engine_console_messages.push({
-      level: "error",
-      message: args.map(__engine_console_format).join(" ")
-    });
-  }
-};
+export function consoleMixin(engineGlobal: EngineGlobal): void {
+  const console = {
+    log(...args: unknown[]) {
+      if (!engineGlobal.__engine_console_enabled) return;
+      engineGlobal.__engine_console_dirty = true;
+      engineGlobal.__engine_console_messages.push({
+        level: "log",
+        message: args.map(__engine_console_format).join(" ")
+      });
+    },
+    info(...args: unknown[]) {
+      if (!engineGlobal.__engine_console_enabled) return;
+      engineGlobal.__engine_console_dirty = true;
+      engineGlobal.__engine_console_messages.push({
+        level: "info",
+        message: args.map(__engine_console_format).join(" ")
+      });
+    },
+    debug(...args: unknown[]) {
+      if (!engineGlobal.__engine_console_enabled) return;
+      engineGlobal.__engine_console_dirty = true;
+      engineGlobal.__engine_console_messages.push({
+        level: "debug",
+        message: args.map(__engine_console_format).join(" ")
+      });
+    },
+    warn(...args: unknown[]) {
+      if (!engineGlobal.__engine_console_enabled) return;
+      engineGlobal.__engine_console_dirty = true;
+      engineGlobal.__engine_console_messages.push({
+        level: "warn",
+        message: args.map(__engine_console_format).join(" ")
+      });
+    },
+    error(...args: unknown[]) {
+      if (!engineGlobal.__engine_console_enabled) return;
+      engineGlobal.__engine_console_dirty = true;
+      engineGlobal.__engine_console_messages.push({
+        level: "error",
+        message: args.map(__engine_console_format).join(" ")
+      });
+    }
+  };
+
+  engineGlobal.console = console;
+}

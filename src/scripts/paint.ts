@@ -1,4 +1,4 @@
-import { EngineMatrixInit } from "./types";
+import type { EngineMatrixInit } from "./types";
 import { __engine_number } from "./util";
 import { Canvas, OffscreenCanvas } from "./canvas";
 import { Image, ImageBitmap } from "./image";
