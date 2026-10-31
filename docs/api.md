@@ -1,5 +1,9 @@
 # API
 
+Most of the [Canvas API](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API) is supported in Kopitiam, except for text-related features. We recommend using bitmap text.
+
+The documentation below explains the additional APIs Kopitiam provides. We aim to keep our API surface as minimal as possible.
+
 ## Globals
 
 Available via `globaThis`
