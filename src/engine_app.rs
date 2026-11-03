@@ -20,7 +20,7 @@ use crate::{
   draw_command,
   native_bridge::NativeBridge,
   profile::{FrameProfile, FrameProfileSample},
-  renderer::{Renderer, RendererFactory},
+  software_renderer::SoftwareRenderer,
   window_config::WindowConfig,
 };
 
@@ -29,7 +29,7 @@ pub struct EngineApp {
   config: WindowConfig,
   scale_mode: CanvasScaleMode,
   window: Option<Arc<WinitWindow>>,
-  renderer: Option<Renderer>,
+  renderer: Option<SoftwareRenderer>,
   canvas_width: usize,
   canvas_height: usize,
   window_width: usize,
@@ -101,7 +101,7 @@ impl EngineApp {
     let size = window.inner_size();
     self.resize_to_window(size)?;
 
-    let renderer = RendererFactory::create(Arc::clone(&window), size)?;
+    let renderer = SoftwareRenderer::new(Arc::clone(&window), size)?;
 
     self.window = Some(window);
     self.renderer = Some(renderer);
@@ -196,20 +196,17 @@ impl EngineApp {
       )?;
 
       if self.profile {
-        self.profile_stats.record(
-          renderer.name(),
-          FrameProfileSample {
-            frame: frame_started.elapsed(),
-            js: js_elapsed,
-            take: take_elapsed,
-            render: timings.render,
-            readback: timings.readback,
-            present: timings.present,
-            commands: command_count,
-            batch_draws: batch_draw_count,
-            js_profile,
-          },
-        );
+        self.profile_stats.record(FrameProfileSample {
+          frame: frame_started.elapsed(),
+          js: js_elapsed,
+          take: take_elapsed,
+          render: timings.render,
+          readback: timings.readback,
+          present: timings.present,
+          commands: command_count,
+          batch_draws: batch_draw_count,
+          js_profile,
+        });
       }
     }
 

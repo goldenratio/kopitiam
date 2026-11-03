@@ -7,7 +7,7 @@ const GAME_JS: &str = concat!(
 );
 
 fn main() -> Result<()> {
-  kopitiam::run_script_with_options(
+  kopitiam::run_script(
     GAME_JS,
     EngineOptions::default().with_native_function("nativeHostPing", native_host_ping),
   )

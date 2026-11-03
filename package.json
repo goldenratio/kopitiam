@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "typecheck": "tsc -p tsconfig.json",
-    "bundle": "esbuild src/scripts/prelude.ts --bundle --format=iife --target=es2022 --keep-names --outfile=src/gen/prelude.js",
+    "bundle": "esbuild src/scripts/index.ts --bundle --format=iife --target=es2022 --keep-names --outfile=src/gen/prelude.js",
     "build": "npm run typecheck && npm run bundle"
   },
   "devDependencies": {

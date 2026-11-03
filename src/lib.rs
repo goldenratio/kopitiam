@@ -18,17 +18,13 @@ mod engine_options;
 mod native_bridge;
 mod native_function_binding;
 mod profile;
-mod renderer;
 mod skia_utils;
+mod software_renderer;
 mod window_config;
 
 use crate::{engine_app::EngineApp, native_bridge::NativeBridge, window_config::WindowConfig};
 
-pub fn run_script(script: impl AsRef<str>) -> Result<()> {
-  run_script_with_options(script.as_ref(), EngineOptions::default())
-}
-
-pub fn run_script_with_options(script: &str, options: EngineOptions) -> Result<()> {
+pub fn run_script(script: &str, options: EngineOptions) -> Result<()> {
   let config = options.window.clone().normalized();
   let mut bridge = NativeBridge::new(script, &options)?;
   if bridge.has_exit_command()? {

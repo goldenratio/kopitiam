@@ -55,7 +55,7 @@ fn main() -> Result<()> {
 }
 ```
 
-Embedders can expose host functions to JavaScript:
+Calling Rust from JavaScript:
 
 ```rust
 use kopitiam::{EngineOptions, JsContext, JsResult, JsValue};

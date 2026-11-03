@@ -79,7 +79,7 @@ pub struct FrameProfileSample {
 }
 
 impl FrameProfile {
-  pub fn record(&mut self, renderer: &str, sample: FrameProfileSample) {
+  pub fn record(&mut self, sample: FrameProfileSample) {
     let now = Instant::now();
     let window_started = *self.window_started.get_or_insert(now);
     self.frames += 1;
@@ -104,8 +104,7 @@ impl FrameProfile {
     if now.duration_since(window_started) >= Duration::from_secs(1) {
       let frames = self.frames as f64;
       eprintln!(
-        "[profile] renderer={} fps={:.1} commands/frame={:.1} batchDraws/frame={:.1} frame={:.2}ms js={:.2}ms tickDispatch={:.2}ms tickListeners={:.2}ms tickOverhead={:.2}ms nativeBatch={:.2}ms/{} console={:.2}ms take={:.2}ms render={:.2}ms readback={:.2}ms present={:.2}ms",
-        renderer,
+        "[profile] fps={:.1} commands/frame={:.1} batchDraws/frame={:.1} frame={:.2}ms js={:.2}ms tickDispatch={:.2}ms tickListeners={:.2}ms tickOverhead={:.2}ms nativeBatch={:.2}ms/{} console={:.2}ms take={:.2}ms render={:.2}ms readback={:.2}ms present={:.2}ms",
         frames / now.duration_since(window_started).as_secs_f64(),
         self.commands as f64 / frames,
         self.batch_draws as f64 / frames,

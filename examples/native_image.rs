@@ -59,7 +59,7 @@ canvas.addEventListener("tick", () => {
 "##;
 
 fn main() -> Result<()> {
-  kopitiam::run_script_with_options(
+  kopitiam::run_script(
     GAME_JS,
     EngineOptions::default().with_native_function("nativeTilePngBytes", native_tile_png_bytes),
   )

@@ -49,7 +49,7 @@ fn run_script_file_with_options(path: impl AsRef<Path>, options: EngineOptions) 
   let path = path.as_ref();
   let script = fs::read_to_string(path)
     .with_context(|| format!("failed to read JavaScript file `{}`", path.display()))?;
-  kopitiam::run_script_with_options(&script, options)
+  kopitiam::run_script(&script, options)
 }
 
 fn parse_dimension(value: &str) -> Result<usize, String> {
